@@ -502,8 +502,39 @@
       .gallery-hint {
         text-align: center;
         margin-top: 15px;
-        color: var(--secondary-text);
-        font-size: 0.9rem;
+        color: var(--primary-color);
+        font-size: 1rem;
+        font-weight: 500;
+        opacity: 0.9;
+        transition: all 0.3s ease;
+      }
+
+      .single-memory-view:hover .gallery-hint {
+        opacity: 1;
+        transform: translateY(-2px);
+      }
+
+      .sphere-hint {
+        text-align: center;
+        margin-top: 20px;
+        color: var(--primary-color);
+        font-size: 1rem;
+        font-weight: 500;
+        opacity: 0.9;
+        background: var(--card-bg);
+        padding: 12px 20px;
+        border-radius: 50px;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        display: inline-block;
+        transition: all 0.3s ease;
+      }
+
+      .sphere-hint:hover {
+        opacity: 1;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
       }
 
       /* Wishlist Section */
@@ -1069,9 +1100,16 @@
       .album-hint {
         text-align: center;
         margin-top: 30px;
-        color: var(--secondary-text);
-        font-size: 0.9rem;
-        animation: bounce 2s infinite;
+        color: var(--primary-color);
+        font-size: 1rem;
+        font-weight: 500;
+        opacity: 0.9;
+        transition: all 0.3s ease;
+      }
+
+      .album-section:hover .album-hint {
+        opacity: 1;
+        transform: translateY(-2px);
       }
 
       @keyframes bounce {
@@ -1124,6 +1162,13 @@
         font-weight: 500;
       }
 
+      .loading-percentage {
+        font-size: 1.5rem;
+        color: var(--primary-color);
+        margin-bottom: 10px;
+        font-weight: 600;
+      }
+
       .loading-progress {
         width: 100%;
         height: 8px;
@@ -1152,6 +1197,7 @@
         <div class="loading-content">
           <div class="loading-spinner"></div>
           <div class="loading-text">加载我们的甜蜜回忆中...</div>
+          <div class="loading-percentage">{{ loadingProgress }}%</div>
           <div class="loading-progress">
             <div class="progress-bar" :style="{ width: loadingProgress + '%' }"></div>
           </div>
@@ -1255,26 +1301,26 @@
             </div>
 
             <!-- Sphere View Mode -->
-            <div
-              v-else
-              :class="['sphere-container', { dragging: isDraggingSphere }]"
-              @mousedown.prevent="startDrag"
-              @touchstart.prevent="startDrag"
-              @wheel.prevent="handleZoom"
-              key="sphere"
-            >
-              <div class="sphere-scene" :style="sphereStyle">
-                 <div 
-                   class="sphere-item" 
-                   v-for="(pos, index) in spherePositions" 
-                   :key="index"
-                   :style="{ transform: `translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px) rotateY(${pos.rotY}deg) rotateX(${pos.rotX}deg)` }"
-                   @click.stop="openModal(pos.src)"
-                 >
-                   <img :src="pos.src" class="sphere-img" />
-                 </div>
+            <div v-else key="sphere">
+              <div
+                :class="['sphere-container', { dragging: isDraggingSphere }]"
+                @mousedown.prevent="startDrag"
+                @touchstart.prevent="startDrag"
+                @wheel.prevent="handleZoom"
+              >
+                <div class="sphere-scene" :style="sphereStyle">
+                   <div 
+                     class="sphere-item" 
+                     v-for="(pos, index) in spherePositions" 
+                     :key="index"
+                     :style="{ transform: `translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px) rotateY(${pos.rotY}deg) rotateX(${pos.rotX}deg)` }"
+                     @click.stop="openModal(pos.src)"
+                   >
+                     <img :src="pos.src" class="sphere-img" />
+                   </div>
+                </div>
               </div>
-              <div class="gallery-hint" style="position: absolute; bottom: 20px; pointer-events: none;">
+              <div class="sphere-hint">
                  👆 拖动旋转 · 双指缩放 · 点击查看
               </div>
             </div>
