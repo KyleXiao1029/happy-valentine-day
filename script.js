@@ -158,18 +158,6 @@ createApp({
       { id: 6, src: 'images/独家相册/IMG_20211226_155747.jpg', caption: '第一次和你踏雪', transform: 'rotate(-3deg)', swiped: false },
     ])
 
-    // 所有需要加载的图片URL（去重）
-    const allImageUrls = [...new Set([
-      ...gallery,
-      ...albumPhotos.map(p => p.src),
-      ...timeline.flatMap(item => item.images)
-    ])]
-
-    // 加载状态
-    const loadingProgress = ref(0)
-    const loadedImagesCount = ref(0)
-    const totalImagesCount = ref(allImageUrls.length)
-
     const wishlist = reactive([
       { text: '一起去看一场电影', done: false },
       { text: '一起去海边看风景', done: false },
@@ -266,6 +254,63 @@ createApp({
     }
 
     // --- Logic ---
+    // 优先加载项：首屏和重要内容
+    const criticalImages = [
+      ...albumPhotos.map(p => p.src),
+      ...timeline.flatMap(item => item.images).slice(0, 4) // 前几个里程碑
+    ]
+    
+    // 所有需要加载的图片URL（去重并排序，优先加载关键图片）
+    const allImageUrls = [...new Set([
+      ...criticalImages,
+      ...timeline.flatMap(item => item.images),
+      ...gallery,
+    ])]
+
+    // 加载状态
+    const loadingProgress = ref(0)
+    const loadedImagesCount = ref(0)
+    const totalImagesCount = ref(allImageUrls.length)
+
+    // 图片预加载函数
+    const preloadImages = () => {
+      if (allImageUrls.length === 0) {
+        loadingProgress.value = 100
+        return
+      }
+
+      let completedCount = 0
+      const total = allImageUrls.length
+      
+      // 设置一个最大等待时间（例如 15 秒），防止个别大图导致一直卡在加载页
+      const forceShowTimeout = setTimeout(() => {
+        if (loadingProgress.value < 100) {
+          console.log('Loading timeout, showing page anyway...')
+          loadingProgress.value = 100
+        }
+      }, 15000)
+
+      allImageUrls.forEach(url => {
+        const img = new Image()
+        const onImageEvent = () => {
+          completedCount++
+          loadedImagesCount.value = completedCount
+          loadingProgress.value = Math.round((completedCount / total) * 100)
+          
+          if (completedCount === total) {
+            clearTimeout(forceShowTimeout)
+            // 额外延迟一点点，让进度条显示 100% 后平滑过渡
+            setTimeout(() => {
+              loadingProgress.value = 100
+            }, 500)
+          }
+        }
+        
+        img.onload = onImageEvent
+        img.onerror = onImageEvent // 即使加载失败也继续
+        img.src = url
+      })
+    }
 
     // Album Logic
     let isSwiping = false
@@ -550,22 +595,7 @@ createApp({
       checkTimelineScroll() // Initial check
       
       // 图片加载检测
-      if (allImageUrls.length > 0) {
-        allImageUrls.forEach(url => {
-          const img = new Image()
-          img.onload = () => {
-            loadedImagesCount.value++
-            loadingProgress.value = Math.round((loadedImagesCount.value / totalImagesCount.value) * 100)
-          }
-          img.onerror = () => {
-            loadedImagesCount.value++
-            loadingProgress.value = Math.round((loadedImagesCount.value / totalImagesCount.value) * 100)
-          }
-          img.src = url
-        })
-      } else {
-        loadingProgress.value = 100
-      }
+      preloadImages()
       
       // 预初始化球体，防止点击时闪烁或加载失败
       initSphereWithSrc(200)
@@ -606,7 +636,6 @@ createApp({
       toggleWish,
       checkAnswer,
       toggleLike,
-      gallery,
       isSphereView,
       spherePositions,
       sphereStyle,
