@@ -111,10 +111,14 @@
         <!-- Gallery Wrapper with Transition -->
         <div class="gallery-wrapper" :style="{ height: isSphereView ? '500px' : '420px' }">
           <transition name="fade" mode="out-in">
-            <!-- Single View Mode -->
-            <div v-if="!isSphereView" class="single-memory-view" @click="enterSphereView" key="single">
-              <img :src="gallery[0]" class="single-memory-img" alt="Memory Cover" />
-              <p class="gallery-hint">👆 点击展开我们的回忆宇宙</p>
+            <!-- Single View Mode (Mysterious Button) -->
+            <div v-if="!isSphereView" class="mystery-box-container" @click="enterSphereView" key="single">
+              <div class="mystery-box">
+                <div class="box-front">🎁</div>
+                <div class="box-back">✨</div>
+                <div class="box-inner">❤️</div>
+              </div>
+              <p class="gallery-hint">发现了一个神秘礼盒，快点击开启我们的回忆宇宙吧！</p>
             </div>
 
             <!-- Sphere View Mode -->

@@ -31,7 +31,31 @@ createApp({
         date: '2021年5月20日',
         title: '第一个520',
         desc: '还记得那天有点害羞的我们吗？那是我们第一次一起过520。',
-        images: ['images/里程碑/IMG_20210521_165807.jpg'],
+        images: ['images/里程碑/IMG_20210521_165807.jpg', 'images/里程碑/IMG_20210523_123631.jpg'],
+        visible: false,
+        liked: false,
+      },
+      {
+        date: '2021年10月6日',
+        title: '第一次和你一起划船',
+        desc: '还记得那天的天气吗？我们一起划船，在水上游过了好几圈。',
+        images: [
+          'images/里程碑/IMG_20211006_191245.jpg',
+          'images/里程碑/IMG_20211006_192525.jpg',
+          'images/里程碑/IMG_20211006_193007.jpg'
+        ],
+        visible: false,
+        liked: false,
+      },
+      {
+        date: '2021年12月03日',
+        title: '你第一次陪我过生日',
+        desc: '那是我最难忘的生日，因为有你在身边，让平凡的日子变得特别。',
+        images: [
+          'images/里程碑/IMG_20211203_221505.jpg',
+          'images/里程碑/IMG_20211203_231830.jpg',
+          'images/里程碑/IMG_20211203_220513.jpg',
+        ],
         visible: false,
         liked: false,
       },
@@ -39,7 +63,11 @@ createApp({
         date: '2021年12月19日',
         title: '第一次陪你过生日',
         desc: '还记得那天的天气吗？还有我们一起吃的可爱的蛋糕。',
-        images: ['images/里程碑/IMG_20211226_155747.jpg'],
+        images: [
+          'images/里程碑/IMG_20211219_002233.jpg',
+          'images/里程碑/IMG_20211219_003004.jpg',
+          'images/里程碑/IMG_20211219_001904.jpg',
+        ],
         visible: false,
         liked: false,
       },
@@ -47,15 +75,23 @@ createApp({
         date: '2022年3月19日',
         title: '一周年纪念',
         desc: '春夏秋冬，四季轮回。感谢你陪我走过的一年四季。',
-        images: ['images/里程碑/IMG_20210523_123631.jpg'],
+        images: [
+          'images/里程碑/IMG_20220204_205053.jpg',
+          'images/里程碑/IMG_20220204_205053.jpg',
+        ],
         visible: false,
         liked: false,
       },
       {
         date: '2023年...',
-        title: '更多美好回忆',
-        desc: '一起去旅行，一起看电影，一起吃遍大街小巷的美食。',
-        images: ['images/独家相册/IMG_20240809_183644.jpg'],
+        title: '我们第一次一起去海边',
+        desc: '红树林让我们大失所望哈哈哈，但是有宝宝在就很美好。',
+        images: [
+          'images/里程碑/IMG_20230401_160711.jpg',
+          'images/里程碑/IMG_20230401_161045.jpg',
+          'images/里程碑/IMG_20230401_161658.jpg',
+          'images/里程碑/IMG_20230401_165459.jpg',
+        ],
         visible: false,
         liked: false,
       },
@@ -63,7 +99,7 @@ createApp({
         date: '现在',
         title: '未来可期',
         desc: '故事还在继续，未来还有无数个日子等着我们去探索。',
-        images: ['images/独家相册/IMG_20240809_184354.jpg'],
+        images: ['images/里程碑/638e2fb3-8395-4450-b37a-2d5005164038.png'],
         visible: false,
         liked: false,
       },
@@ -87,22 +123,39 @@ createApp({
       },
     ]
 
+    // --- 点滴回忆照片列表 ---
+    // 如果以后添加了新照片，直接把路径加到这个数组里即可
     const gallery = [
-      'images/里程碑/IMG_20210328_130258.jpg',
-      'images/里程碑/IMG_20210521_165807.jpg',
-      'images/里程碑/IMG_20210523_123631.jpg',
-      'images/里程碑/IMG_20211226_155747.jpg',
+      'images/点滴回忆/IMG_16.JPG',
+      'images/点滴回忆/IMG_20210523_123844.jpg',
       'images/点滴回忆/IMG_20211226_155748.jpg',
-      'images/独家相册/mmexport1639929438365.jpg',
+      'images/点滴回忆/IMG_20220416_104010.jpg',
+      'images/点滴回忆/IMG_20220520_212000.jpg',
+      'images/点滴回忆/IMG_20220520_213046.jpg',
+      'images/点滴回忆/IMG_20220706_221946.jpg',
+      'images/点滴回忆/IMG_20220706_221951.jpg',
+      'images/点滴回忆/IMG_20221023_202025.jpg',
+      'images/点滴回忆/IMG_20240809_183921.jpg',
+      'images/点滴回忆/IMG_20240813_142246.jpg',
+      'images/点滴回忆/IMG_20240820_152119.jpg',
+      'images/点滴回忆/IMG_20250103_203616.jpg',
+      'images/点滴回忆/IMG_20250202_121732.jpg',
+      'images/点滴回忆/Screenshot_20210913_224157_com.tencent.mobileqq.jpg',
+      'images/点滴回忆/Screenshot_20211002_231834_com.netease.sky.huawei.jpg',
+      'images/点滴回忆/Videoframe_20210703_224137_com.huawei.himovie.jpg',
+      'images/点滴回忆/mmexport1723125315596.jpg',
+      'images/点滴回忆/mmexport1728227417378.jpg',
+      'images/点滴回忆/mmexport1738592452082.jpg'
     ]
 
     // Album Data
     const albumPhotos = reactive([
-      { id: 1, src: 'images/独家相册/IMG_20240809_183644.jpg', caption: '初见的那天', transform: 'rotate(-2deg)', swiped: false },
-      { id: 2, src: 'images/独家相册/IMG_20240809_183921.jpg', caption: '甜蜜的约会', transform: 'rotate(3deg)', swiped: false },
-      { id: 3, src: 'images/独家相册/IMG_20240809_184354.jpg', caption: '一起去旅行', transform: 'rotate(-4deg)', swiped: false },
-      { id: 4, src: 'images/独家相册/Screenshot_20210913_224157_com.tencent.mobileqq.jpg', caption: '简单的幸福', transform: 'rotate(1deg)', swiped: false },
-      { id: 5, src: 'images/独家相册/mmexport1639929438365.jpg', caption: '未来的我们', transform: 'rotate(5deg)', swiped: false },
+      { id: 1, src: 'images/独家相册/IMG_20240809_183644.jpg', caption: '美丽的海边', transform: 'rotate(-2deg)', swiped: false },
+      { id: 2, src: 'images/独家相册/IMG_20240809_184354.jpg', caption: '和宝宝在一起', transform: 'rotate(3deg)', swiped: false },
+      { id: 3, src: 'images/独家相册/mmexport1639929438365.jpg', caption: '合拍的我们', transform: 'rotate(-4deg)', swiped: false },
+      { id: 4, src: 'images/独家相册/IMG_20240813_145224.jpg', caption: '第一次和你一起漂流', transform: 'rotate(1deg)', swiped: false },
+      { id: 5, src: 'images/独家相册/IMG_0448.JPG', caption: '我最得意的作品', transform: 'rotate(5deg)', swiped: false },
+      { id: 6, src: 'images/独家相册/IMG_20211226_155747.jpg', caption: '第一次和你踏雪', transform: 'rotate(-3deg)', swiped: false },
     ])
 
     // 所有需要加载的图片URL（去重）
@@ -120,10 +173,10 @@ createApp({
     const wishlist = reactive([
       { text: '一起去看一场电影', done: false },
       { text: '一起去海边看风景', done: false },
+      { text: '一起做蛋糕', done: false },
       { text: '一起做一顿丰盛的晚餐', done: false },
       { text: '一起去另一个城市旅行', done: false },
-      { text: '领养一只可爱的小猫', done: false },
-      { text: '每年都一起过情人节', done: false },
+      { text: '一起爬好多座山', done: false },
       { text: '一起做好多好多事情...', done: false },
     ])
 
