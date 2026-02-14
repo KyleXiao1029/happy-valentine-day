@@ -1814,6 +1814,9 @@
             setInterval(createHeart, 800)
             window.addEventListener('scroll', checkTimelineScroll)
             checkTimelineScroll() // Initial check
+            
+            // 预初始化球体，防止点击时闪烁或加载失败
+            initSphereWithSrc(200)
           })
 
           onUnmounted(() => {
@@ -1851,6 +1854,7 @@
             toggleWish,
             checkAnswer,
             toggleLike,
+            gallery,
             isSphereView,
             spherePositions,
             sphereStyle,
