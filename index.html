@@ -1247,14 +1247,14 @@
               v-for="(opt, index) in quiz.options"
               :key="index"
               :class="{ 
-                   correct: quiz.answered && opt.correct, 
-                   wrong: quiz.answered && quiz.selected === index && !opt.correct 
+                   correct: opt.selected && opt.correct, 
+                   wrong: opt.selected && !opt.correct 
                  }"
               @click="checkAnswer(index)"
             >
               {{ opt.text }}
-              <span v-if="quiz.answered && opt.correct"> (答对啦！❤️)</span>
-              <span v-if="quiz.answered && quiz.selected === index && !opt.correct"> (再猜猜？)</span>
+              <span v-if="opt.selected && opt.correct"> (答对啦！❤️)</span>
+              <span v-if="opt.selected && !opt.correct"> (再猜猜？)</span>
             </div>
           </div>
         </div>
@@ -1434,12 +1434,11 @@
           const quiz = reactive({
             question: '政政最喜欢培培的哪个瞬间？',
             options: [
-              { text: '生气的样子', correct: false },
-              { text: '每一个瞬间', correct: true },
-              { text: '吃饭的样子', correct: false },
+              { text: '生气的样子', correct: false, selected: false },
+              { text: '每一个瞬间', correct: true, selected: false },
+              { text: '吃饭的样子', correct: false, selected: false },
             ],
             answered: false,
-            selected: -1,
           })
 
           const letter = [
@@ -1623,9 +1622,9 @@
           // Quiz
           const checkAnswer = index => {
             if (quiz.answered) return
-            quiz.selected = index
-            quiz.answered = true
+            quiz.options[index].selected = true
             if (quiz.options[index].correct) {
+              quiz.answered = true
               for (let i = 0; i < 20; i++) setTimeout(createHeart, i * 100)
             }
           }
