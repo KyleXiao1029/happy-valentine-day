@@ -3,7 +3,8 @@
     "allow": [
       "Bash(curl:*)",
       "Bash(gh api:*)",
-      "Bash(where:*)"
+      "Bash(where:*)",
+      "Bash(dir:*)"
     ]
   }
 }

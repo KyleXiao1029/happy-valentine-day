@@ -437,6 +437,14 @@
         transition: transform 0.1s ease-out;
       }
 
+      .sphere-container.dragging .sphere-scene {
+        transition: none;
+      }
+
+      .sphere-container.dragging .sphere-item {
+        transition: none;
+      }
+
       .gallery-wrapper {
         position: relative;
         transition: height 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -1171,10 +1179,10 @@
             </div>
 
             <!-- Sphere View Mode -->
-            <div 
-              v-else 
-              class="sphere-container" 
-              @mousedown.prevent="startDrag" 
+            <div
+              v-else
+              :class="['sphere-container', { dragging: isDraggingSphere }]"
+              @mousedown.prevent="startDrag"
               @touchstart.prevent="startDrag"
               @wheel.prevent="handleZoom"
               key="sphere"
@@ -1191,7 +1199,7 @@
                  </div>
               </div>
               <div class="gallery-hint" style="position: absolute; bottom: 20px; pointer-events: none;">
-                 👆 拖动旋转 · 滚轮缩放 · 点击查看
+                 👆 拖动旋转 · 双指缩放 · 点击查看
               </div>
             </div>
           </transition>
@@ -1708,24 +1716,63 @@
           let isDragging = false
           let lastMouseX = 0
           let lastMouseY = 0
-          
+          let isPinching = false
+          let lastPinchDist = 0
+          const isDraggingSphere = ref(false)
+
+          const getPinchDist = (touches) => {
+            const dx = touches[0].clientX - touches[1].clientX
+            const dy = touches[0].clientY - touches[1].clientY
+            return Math.sqrt(dx * dx + dy * dy)
+          }
+
           const startDrag = (e) => {
             e.preventDefault()
+
+            // 双指捏合缩放
+            if (e.touches && e.touches.length >= 2) {
+              isPinching = true
+              isDragging = false
+              lastPinchDist = getPinchDist(e.touches)
+              window.addEventListener('touchmove', onPinch, { passive: false })
+              window.addEventListener('touchend', stopPinch)
+              return
+            }
+
             isDragging = true
+            isDraggingSphere.value = true
             const clientX = e.touches ? e.touches[0].clientX : e.clientX
             const clientY = e.touches ? e.touches[0].clientY : e.clientY
             lastMouseX = clientX
             lastMouseY = clientY
-            
+
             window.addEventListener('mousemove', onDrag)
             window.addEventListener('mouseup', stopDrag)
             window.addEventListener('touchmove', onDrag, { passive: false })
             window.addEventListener('touchend', stopDrag)
           }
+
+          const onPinch = (e) => {
+            if (!isPinching) return
+            e.preventDefault()
+            if (e.touches.length < 2) return
+            const dist = getPinchDist(e.touches)
+            const delta = dist - lastPinchDist
+            sphereZoom.value += delta * 0.005
+            sphereZoom.value = Math.min(Math.max(0.5, sphereZoom.value), 3)
+            lastPinchDist = dist
+          }
+
+          const stopPinch = () => {
+            isPinching = false
+            window.removeEventListener('touchmove', onPinch)
+            window.removeEventListener('touchend', stopPinch)
+          }
           
           const onDrag = (e) => {
             if (!isDragging) return
             e.preventDefault()
+            if (e.touches && e.touches.length >= 2) return
             const clientX = e.touches ? e.touches[0].clientX : e.clientX
             const clientY = e.touches ? e.touches[0].clientY : e.clientY
             
@@ -1747,6 +1794,7 @@
           
           const stopDrag = () => {
             isDragging = false
+            isDraggingSphere.value = false
             window.removeEventListener('mousemove', onDrag)
             window.removeEventListener('mouseup', stopDrag)
             window.removeEventListener('touchmove', onDrag)
@@ -1809,6 +1857,7 @@
             enterSphereView,
             startDrag,
             handleZoom,
+            isDraggingSphere,
           }
         },
       }).mount('#app')
