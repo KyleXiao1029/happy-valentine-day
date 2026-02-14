@@ -1292,7 +1292,7 @@
         <div class="scanner-hint">{{ scanHint }}</div>
       </section>
 
-      <div class="secret-message" v-if="secretUnlocked" @click="secretUnlocked = false">
+      <div class="secret-message" v-if="secretUnlocked" @click.stop="secretUnlocked = false">
         <div class="secret-content">
           <h2>❤️ 匹配成功 ❤️</h2>
           <p>指纹匹配度 100%</p>
@@ -1500,6 +1500,7 @@
           let progress = 0
           
           const startScan = () => {
+             if (secretUnlocked.value) return
              isScanning.value = true
              scanHint.value = '正在感应中...'
              progress = 0
@@ -1759,6 +1760,7 @@
           }
 
           onMounted(() => {
+            secretUnlocked.value = false
             setInterval(updateTimer, 1000)
             updateTimer()
             setTimeout(typeEffect, 1000)
